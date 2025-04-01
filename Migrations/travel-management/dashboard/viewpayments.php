@@ -1,9 +1,15 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 1) {
-    header("Location: login.php");
-    exit();
+$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel_Agency/Data/auth/config/config.php';
+if (file_exists($includePath)) {
+    include $includePath;
+} else {
+    die("Error: Could not include the database configuration file.");
+}
+
+if (!isset($conn)) {
+    die("Database connection not established.");
 }
 
 $file = '../../../Data/auth/config/config.php';
@@ -107,60 +113,8 @@ if (!$result) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/Travel-Agency/Models/web-design/css/dashboard.css">
-    <link rel="stylesheet" href="../web-design/css/style.css">
+    <link rel="stylesheet" href="/Travel_Agency/Models/web-design/css/viewpayments.css">
     <title>View Payments</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            margin: 20px auto;
-            max-width: 1200px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table th, table td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        table th {
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        form {
-            margin-top: 10px;
-        }
-        form input, form select, form button {
-            margin-right: 5px;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        form button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-        form button:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 <body>
 <section id="header">

@@ -1,51 +1,65 @@
 <?php
 
-$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel-Agency/Data/auth/config/config.php';
+$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel_Agency/Data/auth/config/config.php';
 if (file_exists($includePath)) {
     include $includePath;
 } else {
     die("Error: Could not include the database configuration file.");
 }
 
-
 if (!isset($conn)) {
     die("Database connection not established.");
 }
 
-$message = ""; 
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    $user_id = $conn->real_escape_string($_POST['user_id']); 
-    $name = $conn->real_escape_string($_POST['name']); 
-    $surname = $conn->real_escape_string($_POST['surname']); 
-    $email = $conn->real_escape_string($_POST['email']); 
-    $phone = $conn->real_escape_string($_POST['phone']); 
-    $address = $conn->real_escape_string($_POST['address']); 
-    $location = $conn->real_escape_string($_POST['location']); 
-    $guests = intval($_POST['guests']); 
-    $arrival_date = $conn->real_escape_string($_POST['arrival_date']); 
-    $leaving_date = $conn->real_escape_string($_POST['leaving_date']); 
-
-    $sql = "INSERT INTO bookings (user_id, name, surname, email, phone, address, location, guests, arrival_date, leaving_date) VALUES ('$user_id', '$name', '$surname', '$email', '$phone', '$address', '$location', $guests, '$arrival_date', '$leaving_date')";
-
-    if ($conn->query($sql) === TRUE) {
-        $message = "Rezervimi u shtua me sukses!";
+// Handle Deleting a Booking
+if (isset($_GET['delete'])) {
+    $delete_id = intval($_GET['delete']);
+    $deleteQuery = $conn->query("DELETE FROM bookings WHERE id = $delete_id");
+    if ($deleteQuery) {
+        echo "<script>alert('Booking deleted successfully!'); window.location.href='bookings.php';</script>";
     } else {
-        $message = "Gabim: " . $conn->error;
+        echo "<script>alert('Error deleting booking: " . $conn->error . "');</script>";
     }
 }
 
+// Handle Editing a Booking
+if (isset($_POST['update'])) {
+    $edit_id = intval($_POST['edit_id']);
+    $name = $conn->real_escape_string($_POST['name']);
+    $surname = $conn->real_escape_string($_POST['surname']);
+    $email = $conn->real_escape_string($_POST['email']);
+    $phone = $conn->real_escape_string($_POST['phone']);
+    $guests = intval($_POST['guests']);
+    $arrival_date = $conn->real_escape_string($_POST['arrival_date']);
+    $leaving_date = $conn->real_escape_string($_POST['leaving_date']);
+    
+    $updateQuery = "UPDATE bookings SET name='$name', surname='$surname', email='$email', phone='$phone', guests=$guests, arrival_date='$arrival_date', leaving_date='$leaving_date' WHERE id=$edit_id";
+    
+    if ($conn->query($updateQuery) === TRUE) {
+        echo "<script>alert('Booking updated successfully!'); window.location.href='bookings.php';</script>";
+    } else {
+        echo "<script>alert('Error updating booking: " . $conn->error . "');</script>";
+    }
+}
 
+// Fetch all bookings
 $bookingsQuery = $conn->query("SELECT * FROM bookings");
 if (!$bookingsQuery) {
-    die("Gabim në marrjen e të dhënave: " . $conn->error);
+    die("Error fetching data: " . $conn->error);
+}
+
+$editData = null;
+if (isset($_GET['edit'])) {
+    $edit_id = intval($_GET['edit']);
+    $editQuery = $conn->query("SELECT * FROM bookings WHERE id = $edit_id");
+    if ($editQuery && $editQuery->num_rows > 0) {
+        $editData = $editQuery->fetch_assoc();
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,25 +67,22 @@ if (!$bookingsQuery) {
     <link rel="stylesheet" href="../../../Models/web-design/css/bookings.css">
     <title>Bookings</title>
 </head>
-
 <body>
     <section id="header">
         <div class="header container">
             <div class="nav-bar">
                 <div class="brand">
-                    <a href="dashboard.php">
-                        <h1><span>JO</span>-NA</h1>
-                    </a>
+                    <a href="dashboard.php"><h1><span>JO</span>-NA</h1></a>
                 </div>
                 <div class="nav-list">
                     <ul>
-                    <li><a href="dashboard.php" data-after="Dashboard">Dashboard</a></li>
-                        <li><a href="users.php" data-after="Users">Users</a></li>
-                        <li><a href="bookings.php" data-after="Bookings">Bookings</a></li>
-                        <li><a href="add_flight.php" data-after="Flights">Flights</a></li>
-                        <li><a href="traveler.php" data-after="Traveler">Traveler</a></li>
-                        <li><a href="/Travel-Agency/Data/auth/config/logout.php" data-after="Logout">Logout</a></li>
-                        </ul>
+                        <li><a href="dashboard.php">Dashboard</a></li>
+                        <li><a href="users.php">Users</a></li>
+                        <li><a href="bookings.php">Bookings</a></li>
+                        <li><a href="add_flight.php">Flights</a></li>
+                        <li><a href="traveler.php">Traveler</a></li>
+                        <li><a href="/Travel-Agency/Data/auth/config/logout.php">Logout</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -81,39 +92,32 @@ if (!$bookingsQuery) {
         <div class="bookings container">
             <h1>All Bookings</h1>
             
-            <?php if (!empty($message)) { ?>
-                <p style="color: green; font-weight: bold;"> <?php echo $message; ?> </p>
-            <?php } ?>
-
+            <?php if ($editData) { ?>
+            <h2>Edit Booking</h2>
             <form method="POST" action="">
-                <label for="user_id">User ID:</label>
-                <input type="text" name="user_id" required>
+                <input type="hidden" name="edit_id" value="<?php echo $editData['id']; ?>">
                 <label for="name">Name:</label>
-                <input type="text" name="name" required>
+                <input type="text" name="name" value="<?php echo $editData['name']; ?>" required>
                 <label for="surname">Surname:</label>
-                <input type="text" name="surname" required>
+                <input type="text" name="surname" value="<?php echo $editData['surname']; ?>" required>
                 <label for="email">Email:</label>
-                <input type="email" name="email" required>
+                <input type="email" name="email" value="<?php echo $editData['email']; ?>" required>
                 <label for="phone">Phone:</label>
-                <input type="text" name="phone" required>
-                <label for="address">Address:</label>
-                <input type="text" name="address" required>
-                <label for="location">Location:</label>
-                <input type="text" name="location" required>
+                <input type="text" name="phone" value="<?php echo $editData['phone']; ?>" required>
                 <label for="guests">Guests:</label>
-                <input type="number" name="guests" required>
+                <input type="number" name="guests" value="<?php echo $editData['guests']; ?>" required>
                 <label for="arrival_date">Arrival Date:</label>
-                <input type="date" name="arrival_date" required>
+                <input type="date" name="arrival_date" value="<?php echo $editData['arrival_date']; ?>" required>
                 <label for="leaving_date">Leaving Date:</label>
-                <input type="date" name="leaving_date" required>
-                <button type="submit">Add Booking</button>
+                <input type="date" name="leaving_date" value="<?php echo $editData['leaving_date']; ?>" required>
+                <button type="submit" name="update">Update Booking</button>
             </form>
+            <?php } ?>
 
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>User ID</th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Email</th>
@@ -121,37 +125,29 @@ if (!$bookingsQuery) {
                         <th>Guests</th>
                         <th>Arrival Date</th>
                         <th>Leaving Date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($row = $bookingsQuery->fetch_assoc()) { ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($row['id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['user_id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['surname']); ?></td>
-                            <td><?php echo htmlspecialchars($row['email']); ?></td>
-                            <td><?php echo htmlspecialchars($row['phone']); ?></td>
-                            <td><?php echo htmlspecialchars($row['guests']); ?></td>
-                            <td><?php echo htmlspecialchars($row['arrival_date']); ?></td>
-                            <td><?php echo htmlspecialchars($row['leaving_date']); ?></td>
+                            <td><?php echo $row['id']; ?></td>
+                            <td><?php echo $row['name']; ?></td>
+                            <td><?php echo $row['surname']; ?></td>
+                            <td><?php echo $row['email']; ?></td>
+                            <td><?php echo $row['phone']; ?></td>
+                            <td><?php echo $row['guests']; ?></td>
+                            <td><?php echo $row['arrival_date']; ?></td>
+                            <td><?php echo $row['leaving_date']; ?></td>
+                            <td>
+                                <a href="bookings.php?edit=<?php echo $row['id']; ?>">Edit</a> |
+                                <a href="bookings.php?delete=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure?');">Delete</a>
+                            </td>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
         </div>
     </section>
-
-    <section id="footer">
-        <div class="footer container">
-            <div class="brand">
-                <h1><span>JO</span>-NA</h1>
-            </div>
-            <p>&copy; 2023 JO-NA. All rights reserved</p>
-        </div>
-    </section>
-
-    <script src="../../../../Models/web-design/js/main.js"></script>
 </body>
-
 </html>

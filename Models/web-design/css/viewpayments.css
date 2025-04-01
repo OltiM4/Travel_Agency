@@ -1,0 +1,228 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1, h2 {
+    color: #2c3e50;
+}
+
+/* Header Styles */
+#header {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 10px 0;
+}
+
+#header .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+#header .brand h1 {
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+#header .nav-bar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+#header .nav-bar ul li {
+    display: inline;
+}
+
+#header .nav-bar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#header .nav-bar ul li a:hover {
+    background-color: #34495e;
+}
+
+/* Container Styles */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Payment Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #2c3e50;
+    color: #fff;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Button Styles */
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+button:focus {
+    outline: none;
+}
+
+button[type="submit"] {
+    display: inline-block;
+}
+
+/* Action Buttons */
+button[type="submit"]:first-of-type {
+    background-color: #27ae60;
+}
+
+button[type="submit"]:first-of-type:hover {
+    background-color: #2ecc71;
+}
+
+button[type="submit"]:nth-of-type(2) {
+    background-color: #9b59b6;
+}
+
+button[type="submit"]:nth-of-type(2):hover {
+    background-color: #8e44ad;
+}
+
+button[type="submit"]:nth-of-type(3) {
+    background-color: #e67e22;
+}
+
+button[type="submit"]:nth-of-type(3):hover {
+    background-color: #d35400;
+}
+
+/* Input and Select Styles */
+input[type="text"], input[type="number"], select {
+    width: 250px;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+/* Message Styles */
+.verify-message {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #e74c3c;
+    background-color: #f8d7da;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+}
+
+.verify-message p {
+    margin: 0;
+}
+
+p.success-message {
+    color: #2ecc71;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+p.error-message {
+    color: #e74c3c;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+form input[type="text"] {
+    width: auto;
+}
+
+form input[type="number"] {
+    width: 80px;
+}
+
+form button {
+    margin-left: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #header .nav-bar ul {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}

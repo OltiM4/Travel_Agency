@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 
-$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel-Agency/Data/auth/config/config.php';
+$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel_Agency/Data/auth/config/config.php';
 if (file_exists($includePath)) {
     include $includePath;
 } else {

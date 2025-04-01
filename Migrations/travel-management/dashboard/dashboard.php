@@ -3,12 +3,12 @@ session_start();
 
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /Travel-Agency/Models/web-design/pages/login.php");
+    header("Location: /Travel_Agency/Models/web-design/pages/login.php");
     exit();
 }
 
 
-$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel-Agency/Data/auth/config/config.php';
+$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel_Agency/Data/auth/config/config.php';
 if (file_exists($includePath)) {
     include $includePath;
 } else {
@@ -161,9 +161,9 @@ body {
                         <li><a href="users.php" data-after="Users">Users</a></li>
                         <li><a href="bookings.php" data-after="Bookings">Bookings</a></li>
                         <li><a href="add_flight.php" data-after="Flights">Flights</a></li>
-                        <li><a href="traveler.php">Travelers</a></li>
+                        <li><a href="traveler.php" data-after="Travelers">Travelers</a></li>
                         <li><a href="hotelManagement.php" data-after="Hotels">Hotels</a></li>
-                        <li><a href="viewpayments.php">View Payments</a></li>
+                        <li><a href="viewpayments.php" data-after="View Payments">View Payments</a></li>
                         <li><a href="/Travel-Agency/Data/auth/config/logout.php" data-after="Logout">Logout</a></li>
                         
                         </ul>

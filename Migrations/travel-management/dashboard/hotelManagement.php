@@ -1,16 +1,18 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 1) { // Sigurohuni që vetëm adminët kanë qasje
-    header("Location: login.php");
-    exit();
+
+$includePath = $_SERVER['DOCUMENT_ROOT'] . '/Travel_Agency/Data/auth/config/config.php';
+if (file_exists($includePath)) {
+    include $includePath;
+} else {
+    die("Error: Could not include the database configuration file.");
 }
 
-include '../../../Data/auth/config/config.php';
+if (!isset($conn)) {
+    die("Database connection not established.");
+}
 
-// Për mesazhe pas veprimeve
 $message = "";
 
-// Shto një hotel të ri
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_hotel'])) {
     $name = $_POST['name'];
     $location = $_POST['location'];
@@ -30,7 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_hotel'])) {
     }
 }
 
-// Fshi një hotel ekzistues
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_hotel'])) {
     $hotelID = (int)$_POST['hotelID'];
 
@@ -44,7 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_hotel'])) {
     }
 }
 
-// Përditëso një hotel ekzistues
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_hotel'])) {
     $hotelID = (int)$_POST['hotelID'];
     $name = $_POST['name'];
@@ -65,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_hotel'])) {
     }
 }
 
-// Përditëso disponueshmërinë e dhomave (updateHotelAvailability)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_availability'])) {
     $hotelID = (int)$_POST['hotelID'];
     $newAvailability = (int)$_POST['availability'];
@@ -80,7 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_availability'])
     }
 }
 
-// Shto një facilitet të ri (addFacility)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_facility'])) {
     $hotelID = (int)$_POST['hotelID'];
     $newFacility = $_POST['facility'];
@@ -95,7 +93,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_facility'])) {
     }
 }
 
-// Merr të gjithë hotelet për t'i shfaqur në tabelë
 $hotelsQuery = $conn->query("SELECT * FROM hotels");
 if (!$hotelsQuery) {
     die("Error retrieving hotels: " . $conn->error);
@@ -106,9 +103,9 @@ if (!$hotelsQuery) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/Travel-Agency/Models/web-design/css/hotel.css">
+    <link rel="stylesheet" href="/Travel_Agency/Models/web-design/css/hotel.css">
     
-    <title>Hotel Manasgement Dashboard</title>
+    <title>Hotel Management Dashboard</title>
 </head>
 <body>
 <section id="header">
