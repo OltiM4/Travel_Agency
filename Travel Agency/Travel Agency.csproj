@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Travel_Agency</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic.Layer\BusinessLogic.Layer.csproj" />
+    <ProjectReference Include="..\DataAccess.Layer\DataAccess.Layer.csproj" />
+    <ProjectReference Include="..\Database.Layer\Database.Layer.csproj" />
+    <ProjectReference Include="..\Presentation.Layer\Presentation.Layer.csproj" />
+  </ItemGroup>
+
+</Project>
